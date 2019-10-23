@@ -9,5 +9,5 @@
    * vyhledávat v uložených dotazech
    * verzovat dotazy
 
-## Data:
-### dle svého uvážení, případně na vyžádání dodám SPARQL datazy a příslušné datasety
+### Data:
+   * dle svého uvážení, případně na vyžádání dodám SPARQL datazy a příslušné datasety
