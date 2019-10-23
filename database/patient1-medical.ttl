@@ -1,0 +1,99 @@
+@prefix nexif: <http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix imm:   <http://mre.zcu.cz/ontology/image-mapping.owl#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix nie:   <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#> .
+@prefix acl:   <http://www.w3.org/ns/auth/acl#> .
+@prefix ds:    <http://mre.zcu.cz/ontology/dasta.owl#> .
+@prefix dcm:   <http://mre.zcu.cz/ontology/dcm.owl#> .
+@prefix sd:    <http://www.w3.org/ns/sparql-service-description#> .
+@prefix nihss: <http://mre.zcu.cz/ontology/nihss.owl#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix dscl:  <http://mre.zcu.cz/ontology/dscl.owl#> .
+@prefix nco:   <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#> .
+@prefix id:    <http://mre.zcu.cz/id/> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix nao:   <http://www.semanticdesktop.org/ontologies/2007/08/15/nao#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix icd10: <http://purl.bioontology.org/ontology/ICD10/> .
+@prefix sits:  <http://mre.zcu.cz/ontology/sits.owl#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix mre:   <http://mre.zcu.cz/ontology/mre.owl#> .
+@prefix void:  <http://vocab.deri.ie/void#> .
+@prefix dcmsediext: <http://semantic-dicom.org/dcm-ext#> .
+@prefix im:    <http://mre.zcu.cz/ontology/image#> .
+@prefix adms:  <http://www.w3.org/ns/adms#> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix nrl:   <http://www.semanticdesktop.org/ontologies/2007/08/15/nrl#> .
+@prefix ibd:   <http://mre.zcu.cz/ontology/ibd.owl#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix gr:    <http://purl.org/goodrelations/v1#> .
+@prefix dc10:  <http://purl.org/dc/elements/1.0/> .
+@prefix dcmsedi: <http://semantic-dicom.org/dcm#> .
+@prefix daml:  <http://www.daml.org/2001/03/daml+oil#> .
+@prefix tzont: <http://www.w3.org/2006/timezone#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nfo:   <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix fsl:   <http://www.w3.org/2004/09/fresnel#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+
+id:2285692c932c88f8673a162ef7b5c997993da41c
+        a                 ds:ActualDiagnosis ;
+        ds:datetimeEvent  "2012-04-18"^^xsd:date ;
+        ds:diagCode       dscl:MKN10_5_I639 ;
+        ds:diagDetail     "Mozkový infarkt" ;
+        ds:diagOrder      2 ;
+        ds:patient        id:cd3f0c85b158c08a2b113464991810cf2cdfc387 ;
+        dc:title          "2012-04-18 (2) I63.9 - Mozkový infarkt" .
+
+id:44040e7024d5a4cc177bf0ed29683c2185dbd05b
+        a                  ds:OriginatorDepartment ;
+        ds:departmentName  "Nemocnice na kraji vesnice, Výpočetní tomografie (CT)" ;
+        dc:title           "Nemocnice na kraji vesnice, Výpočetní tomografie (CT)" .
+
+id:3840aecb9edac9f7d7c9172f2f4be82b08ab3ddf
+        a               ds:PermanentAddress ;
+        ds:addressCity  "Město 1" ;
+        ds:addressZIP   "00001" ;
+        dc:title        "Město 1 (00001)" .
+
+id:be8d011f882326495f8d06c58f22db51d95cc7bf
+        a                          ds:MedicalExamination ;
+        ds:datetimeEvent           "2012-09-19T23:20:00+0200"^^xsd:dateTime ;
+        ds:diagnosis               id:2285692c932c88f8673a162ef7b5c997993da41c , id:2c545600eb7a2722809d64c2753de714a5154b6b ;
+        ds:dsclExaminationContent  dscl:LZSOZ_NL ;
+        ds:dsclExaminationOrigin   dscl:LZTOZV_J ;
+        ds:dsclExaminationRequest  dscl:LZTZOV_D ;
+        ds:dsclExaminationState    dscl:LZSZZ_K ;
+        ds:imagingStudyNumber      00000078 ;
+        ds:originator              id:44040e7024d5a4cc177bf0ed29683c2185dbd05b ;
+        ds:reportText              "CT mozku:Na nat.vyšetření známky atrofie mozkových a mozečkových komor bez intrakraniálního krvácení a bez ložisk.defektů mozkové tkáně.Jako vedl.nález větší polypozní útvar v pravém maxil.sinu.\nCT perfuze mozku:Známky opožděného prokrvení (Time to Peak) ve 3 místech mozku-v levé mozečkové hemisféře,v pravé temporookcipiální krajině .V poslední z popisovaných oblastí i snížený průtok a objem krve.Nález 3 ischemických okrsků může odpovídat embolizaci do mozkových tepen.\nCT AH mozk.tepen.:Hemodynamicky nevýznamné atherosklerotické změny v oblasti obou bifurkací karotických tepen,intrakraniální řečiště bez stenotických změn a bez patrného uzávěru." ;
+        ds:reportTitle             "032/002 - CT mozku: s k.l. iv." ;
+        dc:title                   "2012-09-19 23:20: 032/002 - CT mozku: s k.l. iv." .
+
+id:2c545600eb7a2722809d64c2753de714a5154b6b
+        a                 ds:ActualDiagnosis ;
+        ds:datetimeEvent  "2012-04-18"^^xsd:date ;
+        ds:diagCode       dscl:MKN10_5_J180 ;
+        ds:diagDetail     "Bronchopneumonie NS" ;
+        ds:diagOrder      1 ;
+        ds:patient        id:cd3f0c85b158c08a2b113464991810cf2cdfc387 ;
+        dc:title          "2012-04-18 (1) J18.0 - Bronchopneumonie NS" .
+
+id:cd3f0c85b158c08a2b113464991810cf2cdfc387
+        a                 ds:Patient , ds:Male ;
+        ds:address        id:3840aecb9edac9f7d7c9172f2f4be82b08ab3ddf ;
+        ds:clinicalEvent  id:be8d011f882326495f8d06c58f22db51d95cc7bf ;
+        ds:datetimeBirth  "1938-08-13"^^xsd:date ;
+        ds:lastName       "Anon_666" ;
+        ds:patientID      "666" ;
+        ds:sex            "M" ;
+        ds:sexNCLPTPS     dscl:NCLPTPS_M ;
+        ds:sexPOHLAV      dscl:POHLAV_1 ;
+        dc:title          "Anon_666 (M) * 1938-08-13" .
