@@ -11,3 +11,10 @@
 
 ### Data:
    * dle svého uvážení, případně na vyžádání dodám SPARQL datazy a příslušné datasety
+
+### Upřesnění:
+   * V souboru ajax_queries.js je minimalistická ukázka použití browser local storage a AJAX call vůči Fuseki sparql endpointu a vůči Virtuoso endpointu
+   * Fuseki sparql endpoint - localhost, je potřeba si spustit u sebe, založit db, něco do ní nahrát - např. přiložený ttl soubor
+   * Virtuoso - https://dbpedia.org/sparql (pro vzdálené volání třeba oprávnění)
+   * Všimněte si rozdílu ve struktuře odpovědí. Jiné úložiště než Fuseki a Virtuoso nepoužíváme.
+   * Ukázkové dotazy, můžete využít příklady ve druhém cvičení DBM2.
