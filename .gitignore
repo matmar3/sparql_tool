@@ -2,3 +2,4 @@ node_modules/
 .vscode/
 
 sparql_tool.code-workspace
+compiled/

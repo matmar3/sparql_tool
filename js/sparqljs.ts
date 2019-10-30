@@ -1,5 +1,7 @@
 //import {SparqlJsonParser} from "sparqljson-parse";
 
+//#region SPARQL
+
 class SPARQL {
 
     private static query(url: string, query: any, contentType: string, handleSuccess: CallableFunction, handleError: CallableFunction) {
@@ -10,16 +12,20 @@ class SPARQL {
         RESTClient.post(url, data, contentType, handleSuccess, handleError);
     }
 
-    static plaintext_query(url: string, query: string, handleSuccess: CallableFunction, handleError: CallableFunction) {
+    public static plaintext_query(url: string, query: string, handleSuccess: CallableFunction, handleError: CallableFunction) {
         let defaultContentType = 'application/x-www-form-urlencoded; charset=UTF-8';
         SPARQL.query(url, query, defaultContentType, handleSuccess, handleError);
     }
 
 }
 
+//#endregion
+
+//#region REST Client
+
 class RESTClient {
 
-    static readonly DATA_TYPE = 'json';
+    public static readonly DATA_TYPE = 'json';
     
     /**
      * Asynchronous GET request sent given data to the endpoint URL.
@@ -29,7 +35,7 @@ class RESTClient {
      * @param successCallback - handle response on success
      * @param errorCallback - handle error when AJAX call fail
      */
-    static get(url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback:CallableFunction) {
+    public static get(url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback:CallableFunction) {
         RESTClient.async_request('GET', url, data, contentType, successCallback, errorCallback);
     }
     
@@ -41,7 +47,7 @@ class RESTClient {
      * @param successCallback - handle response on success
      * @param errorCallback - handle error when AJAX call fail
      */
-    static post(url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback:CallableFunction) {
+    public static post(url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback:CallableFunction) {
         RESTClient.async_request('POST', url, data, contentType, successCallback, errorCallback);
     }
     
@@ -54,7 +60,7 @@ class RESTClient {
      * @param successCallback - handle response on success
      * @param errorCallback - handle error when AJAX call fail
      */
-    static async_request(method: string, url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback: CallableFunction) {
+    public static async_request(method: string, url: string, data: Object, contentType: string, successCallback: CallableFunction, errorCallback: CallableFunction) {
         $.ajax({
             type: method,
             url: url,
@@ -75,43 +81,76 @@ class RESTClient {
 
 }
 
+//#endregion
+
+//#region Versionable query
+
 class Query {
 
-    private name: string;
-    private queryString: string;
+    private readonly name: string;
+    private queryString: Array<string>;
+    private currentVersion: number;
 
-    constructor(name: string, queryString: string) {
+    public constructor(name: string, queryString: string) {
         this.name = name;
-        this.queryString = queryString;
+        this.queryString = [];
+        this.currentVersion = 0;
+        this.queryString[this.currentVersion] = queryString;
     }
 
-    getName() : string {
+    public getName() : string {
         return this.name;
     }
 
-    getQuery() : string {
-        return this.queryString;
+    public getQuery(version: number) : string {
+        if (version < 0 || version > this.currentVersion) {
+            return null;
+        }
+
+        return this.queryString[version];
+    }
+
+    public getLatestQuery() : string {
+        return this.queryString[this.currentVersion];
+    }
+
+    public modify(modifiedQueryString: string) {
+        this.currentVersion++;
+        this.queryString[this.currentVersion] = modifiedQueryString;
+    }
+
+    public rollbackLastChange() {
+        delete this.queryString[this.currentVersion];
+        this.currentVersion--;
+    }
+
+    public getVersion() : number {
+        return this.currentVersion;
     }
 
 }
+
+//#endregion
+
+//#region Query list
 
 class QueryList {
 
     private queries: Array<Query>;
 
-    constructor() {
+    public constructor() {
         this.queries = [];
     }
 
-    addQuery(query: Query) {
+    public add(query: Query) {
         this.queries.push(query);
     }
 
-    get(index: number) : Query | undefined {
+    public get(index: number) : Query | null {
         return this.queries[index];
     }
 
-    find(queryName: string) : Query | undefined {
+    public find(queryName: string) : Query | null {
         for (let i = 0; i < this.queries.length; i++) {
             let q = this.queries[i];
 
@@ -120,10 +159,27 @@ class QueryList {
             }            
         }
             
-        return undefined;
+        return null;
+    }
+
+    public remove(queryName: string) : boolean {
+        for (let i = 0; i < this.queries.length; i++) {
+            let q = this.queries[i];
+
+            if (q.getName() === queryName) {
+                delete this.queries[i];
+                return true;
+            }            
+        }
+
+        return false;
     }
 
 }
+
+//#endregion
+
+//#region Query Manager
 
 class QueryManager {
 
@@ -131,44 +187,83 @@ class QueryManager {
 
     private queries: QueryList;
 
-    constructor() {
+    public constructor() {
         let obj = localStorage.getItem(this.prefix);
 
-        if (obj != undefined) {
+        if (obj != null) {
             this.queries = JSON.parse(obj);
         }
         else {
             this.queries = new QueryList();
         }
-
-        console.log(this.queries);
     }
 
-    storeQuery(queryName: string, query: string) : boolean {
-        if (this.queries.find(queryName) != undefined) {
+    public storeQuery(queryName: string, queryString: string) : boolean {
+        if (this.queries.find(queryName) != null) {
+            console.warn("Query with given name already exists, try call 'modifyQuery'.")
             return false;
         }
 
-        this.queries.addQuery(new Query(queryName, query));
+        this.queries.add(new Query(queryName, queryString));
         return true;
     }
 
-    loadQuery(queryName: string) : string | undefined {
+    public loadLatestQuery(queryName: string) : string | null {
         let query = this.queries.find(queryName);
         
-        if (query != undefined) {
-            return query.getQuery();
+        if (query != null) {
+            return query.getLatestQuery();
         }
 
-        return undefined;
+        return null;
     }
 
-    save() {
+    public loadQuery(queryName: string, version: number) : string | null {
+        let query = this.queries.find(queryName);
+        
+        if (query != null) {
+            return query.getQuery(version);
+        }
+
+        return null;
+    }
+
+    public modifyQuery(queryName: string, queryString: string) : boolean {
+        let query = this.queries.find(queryName);
+
+        if (query != null) {
+            query.modify(queryString);
+            return true;
+        }
+
+        return false;
+    }
+
+    public removeQuery(queryName: string) : boolean {
+        return this.queries.remove(queryName);
+    }
+
+    public rollbackQuery(queryName: string) : number | null {
+        let query = this.queries.find(queryName);
+
+        if (query != null) {
+            query.rollbackLastChange();
+            return query.getVersion();
+        }
+
+        return null;
+    }
+
+    public save() {
         let json = JSON.stringify(this.queries);
         localStorage.setItem(this.prefix, json);
     }
 
 }
+
+//#endregion
+
+//#region Handlers
     
 function handleSuccess(json: { head: { vars: [ any ], link: any }, "results": { "bindings": [ any ] } }) {
     /*let parser = new SparqlJsonParser();
@@ -181,6 +276,7 @@ function handleError(error: any) {
     console.log("Error occured: ", error);
 }
 
+//#endregion
 
 $(document).ready(function () {
     var virtuoso_url = "http://dbpedia.org/sparql";
@@ -191,6 +287,14 @@ $(document).ready(function () {
     SPARQL.plaintext_query(fuseki_url, query, handleSuccess, handleError);
 
     let qm = new QueryManager();
-    qm.storeQuery("x", "Ahoj");
+    console.log(qm.storeQuery("x", "Ahoj"));
+    console.log(qm.storeQuery("x", "Ahojky"));
+    console.log(qm.modifyQuery("x", "Ahojky"));
+    console.log(qm.loadLatestQuery("x"));
+    console.log(qm.loadQuery("x", 0));
+    console.log(qm.rollbackQuery("x"));
+    console.log(qm.loadLatestQuery("x"));
+    console.log(qm.removeQuery('x'));
+    console.log(qm.loadLatestQuery("x"));
     qm.save();
 });
