@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "C:/Users/Martin/Documents/Repositories/sparql_tool/js/sparql-fuseki-query-ex.html",
+            "url": "C:/Users/Martin/Documents/Repositories/sparql_tool/sparql-fuseki-query-ex.html",
             "webRoot": "${workspaceFolder}"
         }
     ]

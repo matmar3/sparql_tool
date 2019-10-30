@@ -1,0 +1,24 @@
+{
+  "name": "sparql-tool",
+  "version": "1.0.0",
+  "description": "SPARQL Tool",
+  "main": "compiled/sparqljs.js",
+  "dependencies": {
+    "sparqljson-parse": "^1.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://matmar3@bitbucket.org/SWI_Study/sparql_tool.git"
+  },
+  "keywords": [
+    "sparql",
+    "rdf"
+  ],
+  "author": "Martin Matas",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/SWI_Study/sparql_tool#readme"
+}
