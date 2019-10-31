@@ -4,9 +4,13 @@
   "description": "SPARQL Tool",
   "main": "compiled/sparqljs.js",
   "dependencies": {
-    "sparqljson-parse": "^1.5.1"
+    "@types/jquery": "^3.3.31"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
+    "webpack-cli": "^3.3.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

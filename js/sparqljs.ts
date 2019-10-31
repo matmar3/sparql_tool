@@ -1,10 +1,30 @@
-//import {SparqlJsonParser} from "sparqljson-parse";
-
 //#region SPARQL
 
 class SPARQL {
 
-    private static query(url: string, query: any, contentType: string, handleSuccess: CallableFunction, handleError: CallableFunction) {
+    private readonly DEFAULT_TARGET = "body";
+
+    private targetElement: string;
+
+    constructor();
+    constructor(targetElement: string);
+    constructor(targetElement?: string) {
+        if (targetElement == null) {
+            this.targetElement = this.DEFAULT_TARGET;
+        }
+
+        this.targetElement = targetElement;
+    }
+
+    private query(url: string, query: any, contentType: string, handleSuccess?: CallableFunction, handleError?: CallableFunction) {
+        if (handleSuccess == null) {
+            handleSuccess = this.handleResults.bind(this);
+        }
+
+        if (handleError == null) {
+            handleError = this.handleError.bind(this);
+        }
+
         let data = {
             query: query
         };
@@ -12,9 +32,68 @@ class SPARQL {
         RESTClient.post(url, data, contentType, handleSuccess, handleError);
     }
 
-    public static plaintext_query(url: string, query: string, handleSuccess: CallableFunction, handleError: CallableFunction) {
+    public plaintext_query(url: string, query: string, handleSuccess?: CallableFunction, handleError?: CallableFunction) {
+        if (handleSuccess == null) {
+            handleSuccess = this.handleResults.bind(this);
+        }
+
+        if (handleError == null) {
+            handleError = this.handleError.bind(this);
+        }
+
         let defaultContentType = 'application/x-www-form-urlencoded; charset=UTF-8';
-        SPARQL.query(url, query, defaultContentType, handleSuccess, handleError);
+        this.query(url, query, defaultContentType, handleSuccess, handleError);
+    }
+    
+    private handleResults(json: { head: { vars: [ any ], link: any }, results: { "bindings": [ any ] } }) {
+        const variables = json.head.vars;
+        const bindings = json.results.bindings;
+    
+        let table = document.createElement("table");
+        let header = document.createElement("thead");
+        let body = document.createElement("tbody");
+
+        {
+            let row = document.createElement("tr");
+
+            for (let i = 0; i < variables.length; i++) {
+                let cell = document.createElement("th");
+                cell.innerHTML = variables[i];
+                cell.style.cssText = "border: 1px solid black; padding: 5px;";
+                row.appendChild(cell);            
+            }
+
+            row.style.cssText = "border: 1px solid black;";
+            header.appendChild(row);
+        }
+
+        {
+            for (let i = 0; i < bindings.length; i++) {
+                let row = document.createElement("tr");
+
+                for (var prop in bindings[i]) {
+                    if (Object.prototype.hasOwnProperty.call(bindings[i], prop)) {
+                        let cell = document.createElement("td");
+                        cell.innerHTML = bindings[i][prop].value;
+                        cell.style.cssText = "border: 1px solid black; padding:5px;";
+                        row.appendChild(cell);   
+                    }
+                }
+
+                row.style.cssText = "border: 1px solid black;";
+                body.appendChild(row);                
+            }
+        }
+
+        table.appendChild(header);
+        table.appendChild(body);
+        table.style.cssText = "border-collapse: collapse; border: 1px solid black; margin-bottom: 3em;"; 
+
+        $(this.targetElement).append(table);
+    }
+    
+    private handleError(error: any) {
+        console.log("Error occured: ", error);
     }
 
 }
@@ -284,31 +363,3 @@ class QueryManager {
 }
 
 //#endregion
-
-//#region Handlers
-    
-function handleSuccess(json: { head: { vars: [ any ], link: any }, "results": { "bindings": [ any ] } }) {
-    /*let parser = new SparqlJsonParser();
-    let obj = parser.parseJsonResults(json);
-    console.log(obj); */
-    console.log(json);
-}
-
-function handleError(error: any) {
-    console.log("Error occured: ", error);
-}
-
-//#endregion
-
-$(document).ready(function () {
-    var virtuoso_url = "http://dbpedia.org/sparql";
-    var fuseki_url = "http://localhost:3030/DBM2/query";
-    var query = "SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10";
-
-    SPARQL.plaintext_query(virtuoso_url, query, handleSuccess, handleError);
-    SPARQL.plaintext_query(fuseki_url, query, handleSuccess, handleError);
-
-    let qm = new QueryManager();
-    console.log(qm.storeQuery("default", query));
-    qm.save();
-});

@@ -3,10 +3,9 @@
       "target": "es5",
       "module": "commonjs",
       "outDir": "compiled",
-      "moduleResolution": "node",
-      "sourceMap": true,
+      "sourceMap": false,
       "removeComments": true,
-      "noImplicitAny": false
+      "noImplicitAny": true
     },    
     "include": [
         "js/*.ts"
