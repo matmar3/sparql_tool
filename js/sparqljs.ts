@@ -74,7 +74,16 @@ class SPARQL {
                 for (var prop in bindings[i]) {
                     if (Object.prototype.hasOwnProperty.call(bindings[i], prop)) {
                         let cell = document.createElement("td");
-                        cell.innerHTML = bindings[i][prop].value;
+                        let value: string = bindings[i][prop].value;
+                        if (isURL(value)) {
+                            let ref = document.createElement('a');
+                            ref.href = value;
+                            ref.innerHTML = value;
+                            cell.appendChild(ref);
+                        }
+                        else {
+                            cell.innerHTML = bindings[i][prop].value;
+                        }
                         cell.style.cssText = "border: 1px solid black; padding:5px;";
                         row.appendChild(cell);   
                     }
@@ -96,6 +105,11 @@ class SPARQL {
         console.log("Error occured: ", error);
     }
 
+}
+
+function isURL(url: string) {
+    let pattern = new RegExp('^(http:\/\/)(.+)$','im');
+    return !!pattern.test(url);
 }
 
 //#endregion
