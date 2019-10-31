@@ -114,9 +114,17 @@ class Query {
         return this.queryString[this.currentVersion];
     }
 
-    public modify(modifiedQueryString: string) {
+    public modify(modifiedQueryString: string) : number {
+        for (let i = 0; i < this.queryString.length; i++) {
+            if (this.queryString[i] === modifiedQueryString) {
+                console.warn("Query in given format already exists under returned version.");
+                return i;
+            }            
+        }
+
         this.currentVersion++;
         this.queryString[this.currentVersion] = modifiedQueryString;
+        return this.currentVersion;
     }
 
     public rollbackLastChange() {
@@ -138,8 +146,22 @@ class QueryList {
 
     private queries: Array<Query>;
 
-    public constructor() {
+    public constructor();
+    public constructor(json: {queries: [{name: string, queryString: Array<string>, currentVersion: number}]});
+    public constructor(json?: {queries: [{name: string, queryString: Array<string>, currentVersion: number}]}) {
         this.queries = [];
+
+        if (json != null) {
+            for (let i = 0; i < json.queries.length; i++) {
+                let query = json.queries[i];
+
+                this.queries.push(new Query(query.name, query.queryString[0]));
+                let storedQuery = this.queries[i];
+                for (let j = 1; j < query.queryString.length; j++) {
+                    storedQuery.modify(query.queryString[j]);
+                };
+            }
+        }
     }
 
     public add(query: Query) {
@@ -167,7 +189,7 @@ class QueryList {
             let q = this.queries[i];
 
             if (q.getName() === queryName) {
-                delete this.queries[i];
+                this.queries.splice(i, 1);
                 return true;
             }            
         }
@@ -188,10 +210,11 @@ class QueryManager {
     private queries: QueryList;
 
     public constructor() {
-        let obj = localStorage.getItem(this.prefix);
+        let jsonString = localStorage.getItem(this.prefix);
 
-        if (obj != null) {
-            this.queries = JSON.parse(obj);
+        if (jsonString != null) {
+            const json = JSON.parse(jsonString);
+            this.queries = new QueryList(json);
         }
         else {
             this.queries = new QueryList();
@@ -200,7 +223,7 @@ class QueryManager {
 
     public storeQuery(queryName: string, queryString: string) : boolean {
         if (this.queries.find(queryName) != null) {
-            console.warn("Query with given name already exists, try call 'modifyQuery'.")
+            console.warn("Query with given name already exists, try call 'modifyQuery'.");
             return false;
         }
 
@@ -228,15 +251,14 @@ class QueryManager {
         return null;
     }
 
-    public modifyQuery(queryName: string, queryString: string) : boolean {
+    public modifyQuery(queryName: string, queryString: string) : number {
         let query = this.queries.find(queryName);
 
         if (query != null) {
-            query.modify(queryString);
-            return true;
+            return query.modify(queryString);
         }
 
-        return false;
+        return -1;
     }
 
     public removeQuery(queryName: string) : boolean {
@@ -287,14 +309,6 @@ $(document).ready(function () {
     SPARQL.plaintext_query(fuseki_url, query, handleSuccess, handleError);
 
     let qm = new QueryManager();
-    console.log(qm.storeQuery("x", "Ahoj"));
-    console.log(qm.storeQuery("x", "Ahojky"));
-    console.log(qm.modifyQuery("x", "Ahojky"));
-    console.log(qm.loadLatestQuery("x"));
-    console.log(qm.loadQuery("x", 0));
-    console.log(qm.rollbackQuery("x"));
-    console.log(qm.loadLatestQuery("x"));
-    console.log(qm.removeQuery('x'));
-    console.log(qm.loadLatestQuery("x"));
+    console.log(qm.storeQuery("default", query));
     qm.save();
 });
