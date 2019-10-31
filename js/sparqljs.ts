@@ -1,13 +1,22 @@
 //#region SPARQL
 
+/**
+ * Manage communication with specified endpoint and handle response.
+ */
 class SPARQL {
 
+    /* Default target element to render results. */
     private readonly DEFAULT_TARGET = "body";
 
+    /* Target element to render results. */
     private targetElement: string;
 
+    /* Create instance with default target. */
     constructor();
+
+    /* Create instance with given target. */
     constructor(targetElement: string);
+
     constructor(targetElement?: string) {
         if (targetElement == null) {
             this.targetElement = this.DEFAULT_TARGET;
@@ -16,6 +25,14 @@ class SPARQL {
         this.targetElement = targetElement;
     }
 
+    /**
+     * Sent query to given URL and manage response.
+     * @param url - URL endpoint
+     * @param query - some type of query
+     * @param contentType - datatype of given query
+     * @param handleSuccess - handler for response
+     * @param handleError - handler of error situations
+     */
     private query(url: string, query: any, contentType: string, handleSuccess?: CallableFunction, handleError?: CallableFunction) {
         if (handleSuccess == null) {
             handleSuccess = this.handleResults.bind(this);
@@ -32,6 +49,13 @@ class SPARQL {
         RESTClient.post(url, data, contentType, handleSuccess, handleError);
     }
 
+    /**
+     * Sent plaintext query to given URL and manage response.
+     * @param url - URL endpoint
+     * @param query - plaintext query
+     * @param handleSuccess - handler for response
+     * @param handleError - handler of error situations
+     */
     public plaintext_query(url: string, query: string, handleSuccess?: CallableFunction, handleError?: CallableFunction) {
         if (handleSuccess == null) {
             handleSuccess = this.handleResults.bind(this);
@@ -45,6 +69,10 @@ class SPARQL {
         this.query(url, query, defaultContentType, handleSuccess, handleError);
     }
     
+    /**
+     * Parse given SPARQL JSON and represent results as a table inside given target.
+     * @param json - SPARQL JSON response
+     */
     private handleResults(json: { head: { vars: [ any ], link: any }, results: { "bindings": [ any ] } }) {
         const variables = json.head.vars;
         const bindings = json.results.bindings;
@@ -53,7 +81,7 @@ class SPARQL {
         let header = document.createElement("thead");
         let body = document.createElement("tbody");
 
-        {
+        {   // fill table header
             let row = document.createElement("tr");
 
             for (let i = 0; i < variables.length; i++) {
@@ -67,7 +95,7 @@ class SPARQL {
             header.appendChild(row);
         }
 
-        {
+        {   // fill table body
             for (let i = 0; i < bindings.length; i++) {
                 let row = document.createElement("tr");
 
@@ -94,19 +122,29 @@ class SPARQL {
             }
         }
 
+        // compose table
         table.appendChild(header);
         table.appendChild(body);
         table.style.cssText = "border-collapse: collapse; border: 1px solid black; margin-bottom: 3em;"; 
 
+        // render table
         $(this.targetElement).append(table);
     }
     
+    /**
+     * Handle error response.
+     * @param error - error message
+     */
     private handleError(error: any) {
         console.log("Error occured: ", error);
     }
 
 }
 
+/**
+ * Verify given URL.
+ * @param url - URL 
+ */
 function isURL(url: string) {
     let pattern = new RegExp('^(http:\/\/)(.+)$','im');
     return !!pattern.test(url);
@@ -116,8 +154,12 @@ function isURL(url: string) {
 
 //#region REST Client
 
+/**
+ * Provide methods for asynchronous communication with server.
+ */
 class RESTClient {
 
+    /* Response data type. */
     public static readonly DATA_TYPE = 'json';
     
     /**
@@ -178,12 +220,23 @@ class RESTClient {
 
 //#region Versionable query
 
+/**
+ * Represent query in local storage. Provide support for simple version control.
+ */
 class Query {
 
+    /* Label for query. */
     private readonly name: string;
+
+    /* Different versions of query. */
     private queryString: Array<string>;
+
+    /* Actual query version. */
     private currentVersion: number;
 
+    /**
+     * Create first version of query.
+     */
     public constructor(name: string, queryString: string) {
         this.name = name;
         this.queryString = [];
@@ -191,10 +244,18 @@ class Query {
         this.queryString[this.currentVersion] = queryString;
     }
 
+    /**
+     * Return version name.
+     */
     public getName() : string {
         return this.name;
     }
 
+    /**
+     * Return query according to given version number. 
+     * If query version not exists, method return null.
+     * @param version - query version
+     */
     public getQuery(version: number) : string {
         if (version < 0 || version > this.currentVersion) {
             return null;
@@ -203,10 +264,17 @@ class Query {
         return this.queryString[version];
     }
 
+    /**
+     * Return actual version of query.
+     */
     public getLatestQuery() : string {
         return this.queryString[this.currentVersion];
     }
 
+    /**
+     * Create new version of query. Return actual query version or version of query that already exists.
+     * @param modifiedQueryString - modified query
+     */
     public modify(modifiedQueryString: string) : number {
         for (let i = 0; i < this.queryString.length; i++) {
             if (this.queryString[i] === modifiedQueryString) {
@@ -220,11 +288,21 @@ class Query {
         return this.currentVersion;
     }
 
+    /**
+     * Irreversibly reverted change of the query.
+     */
     public rollbackLastChange() {
-        delete this.queryString[this.currentVersion];
+        if (this.currentVersion == 0) {
+            return;
+        }
+
+        this.queryString.splice(this.currentVersion, 1);
         this.currentVersion--;
     }
 
+    /**
+     * Return actual query version.
+     */
     public getVersion() : number {
         return this.currentVersion;
     }
@@ -235,12 +313,20 @@ class Query {
 
 //#region Query list
 
+/**
+ * Manage array of queries.
+ */
 class QueryList {
 
+    /* Array of queries. */
     private queries: Array<Query>;
 
+    /* Create empty list. */
     public constructor();
+
+    /* Create new list filled with data from given json. */
     public constructor(json: {queries: [{name: string, queryString: Array<string>, currentVersion: number}]});
+
     public constructor(json?: {queries: [{name: string, queryString: Array<string>, currentVersion: number}]}) {
         this.queries = [];
 
@@ -257,14 +343,24 @@ class QueryList {
         }
     }
 
+    /* Add new query to the list. */
     public add(query: Query) {
         this.queries.push(query);
     }
 
+    /**
+     * Return query according to given index.
+     * @param index - index into the list of queries 
+     */
     public get(index: number) : Query | null {
         return this.queries[index];
     }
 
+    /**
+     * Return query according to given queryName. If query with given name not exists, 
+     * method return null.
+     * @param queryName name of query
+     */
     public find(queryName: string) : Query | null {
         for (let i = 0; i < this.queries.length; i++) {
             let q = this.queries[i];
@@ -277,6 +373,11 @@ class QueryList {
         return null;
     }
 
+    /**
+     * Remove query from list according to given queryName. If operation succed, 
+     * method return true, otherwise return false.
+     * @param queryName - name of query
+     */
     public remove(queryName: string) : boolean {
         for (let i = 0; i < this.queries.length; i++) {
             let q = this.queries[i];
@@ -296,12 +397,19 @@ class QueryList {
 
 //#region Query Manager
 
+/**
+ * Manage operations with local storage. Provide methods for loading and storing queries in local storage.
+ * Also provide methods for query version control.
+ */
 class QueryManager {
 
+    /* Storage prefix */
     private readonly prefix = 'queries';
 
+    /* In-memory list of queries. */
     private queries: QueryList;
 
+    /* Load stored queries or create new storage. */
     public constructor() {
         let jsonString = localStorage.getItem(this.prefix);
 
@@ -314,6 +422,11 @@ class QueryManager {
         }
     }
 
+    /**
+     * Store given query in memory storage. Return if operation succeeded or not.
+     * @param queryName - name of query
+     * @param queryString - plaintext query
+     */
     public storeQuery(queryName: string, queryString: string) : boolean {
         if (this.queries.find(queryName) != null) {
             console.warn("Query with given name already exists, try call 'modifyQuery'.");
@@ -324,6 +437,10 @@ class QueryManager {
         return true;
     }
 
+    /**
+     * Load latest query version from storage. Query is resolved based on given name.
+     * If query not exists, method return null.
+     */
     public loadLatestQuery(queryName: string) : string | null {
         let query = this.queries.find(queryName);
         
@@ -334,6 +451,12 @@ class QueryManager {
         return null;
     }
 
+    /**
+     * Load query with specific version from storage. Query is resolved based on given name and version.
+     * If query or tis version not exists, method return null.
+     * @param queryName - name of query
+     * @param version - version of query
+     */
     public loadQuery(queryName: string, version: number) : string | null {
         let query = this.queries.find(queryName);
         
@@ -344,6 +467,12 @@ class QueryManager {
         return null;
     }
 
+    /**
+     * Create new version of some query and return actual version of query.
+     * If query not exists, method return -1 as version.
+     * @param queryName - name of modified query
+     * @param queryString - new query
+     */
     public modifyQuery(queryName: string, queryString: string) : number {
         let query = this.queries.find(queryName);
 
@@ -354,10 +483,18 @@ class QueryManager {
         return -1;
     }
 
+    /**
+     * Remove query from list.
+     * @param queryName - query name
+     */
     public removeQuery(queryName: string) : boolean {
         return this.queries.remove(queryName);
     }
 
+    /**
+     * Irreversibly reverted change of the given query.
+     * @param queryName - name of query
+     */
     public rollbackQuery(queryName: string) : number | null {
         let query = this.queries.find(queryName);
 
@@ -369,6 +506,10 @@ class QueryManager {
         return null;
     }
 
+    /**
+     * Store changes into local storage. Generally all queries are loaded and managed in-memory
+     * and every change must be at the end stored using this method to persist data.
+     */
     public save() {
         let json = JSON.stringify(this.queries);
         localStorage.setItem(this.prefix, json);
