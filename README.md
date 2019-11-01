@@ -1,4 +1,14 @@
 # SPARQL Tool
+Javascript tool that can be easily embedded into another web projects. The tool is written in Typescript using JQuery and translated for ECMAScript 5.
+
+## Features
+   - send a SPARQL query to a specified SPARQL endpoint
+   - write the result of the query into a table and visualize it at a specific location on the website
+   - load/save query to browser local storage
+   - manage saved queries
+   - search saved queries
+   - queries version control
+   
 ## Usage 
 ```HTML
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
