@@ -46,8 +46,8 @@ queryManager.storeQuery('example1', 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o
 queryManager.modifyQuery('example1', 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o }'); // 1 (version 1)
 queryManager.loadLatestQuery('example1'); // 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o }'
 queryManager.loadQuery('example1', 0); // 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10'
-queryManager.removeQuery('example1'); // true
 queryManager.rollbackQuery('example1'); // 0 (actual version, version 1 no longer exists)
+queryManager.removeQuery('example1'); // true
 queryManager.save(); // save changes into local storage
 ```
 ## License
