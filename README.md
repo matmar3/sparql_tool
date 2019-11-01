@@ -1,20 +1,46 @@
-# 6. Jednoduchá paměť na SPARQL dotazy v čistém JS 
+# SPARQL Tool
+## Usage 
+```HTML
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="sparqljs.js"></script>
+```
+### SPARQL Client 
+#### Create a new instance
+```javascript
+var sparqlTool = new SPARQL();
+```
+Optionally, you can provide a custom target element to the constructor as a new place to render results:
+```javascript
+var sparqlTool = new SPARQL("#target-element");
+```
+#### Send SPARQL query
+```javascript
+sparqlTool.plaintext_query('URL', 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10');
+```
+Opionally, you can provide callbacks to manage response on success and error. Default callback render data into specified target and error callback print error into console.
+```javascript
+sparqlTool.plaintext_query(
+        'URL', 
+        'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10',
+        successCallableFunction,
+        errorCallableFunction
+);
+```
+### Query Manager
+```javascript
+var queryManager = new QueryManager(); // Load queries from local storage or create new one
+```
+Manage operations with local storage. Also provide methods for query version control.
+```javascript
+queryManager.storeQuery('example1', 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10'); // true (version 0)
+queryManager.modifyQuery('example1', 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o }'); // 1 (version 1)
+queryManager.loadLatestQuery('example1'); // 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o }'
+queryManager.loadQuery('example1', 0); // 'SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10'
+queryManager.removeQuery('example1'); // true
+queryManager.rollbackQuery('example1'); // 0 (actual version, version 1 no longer exists)
+queryManager.save(); // save changes into local storage
+```
+## License
+This software is written by Martin Matas.
 
-## Úkol:
-### 1) Vytvořit Javascriptový nástroj, který bude snadno vložitelný do jiných webových projektů (ideálně jeden javascript soubor k načtení v html hlavičce) a bude umět:
-   * odeslat SPARQL dotaz na zadaný libovolný SPARQL endpoint (ajax)
-   * vypsat výsledek dotazu do triviální webové tabulky
-   * načíst/uložit dotaz do místní paměti problížeče (browser local storage)
-   * spravovat uložené dotazy
-   * vyhledávat v uložených dotazech
-   * verzovat dotazy
-
-### Data:
-   * dle svého uvážení, případně na vyžádání dodám SPARQL datazy a příslušné datasety
-
-### Upřesnění:
-   * V souboru ajax_queries.js je minimalistická ukázka použití browser local storage a AJAX call vůči Fuseki sparql endpointu a vůči Virtuoso endpointu
-   * Fuseki sparql endpoint - localhost, je potřeba si spustit u sebe, založit db, něco do ní nahrát - např. přiložený ttl soubor
-   * Virtuoso - https://dbpedia.org/sparql (pro vzdálené volání třeba oprávnění)
-   * Všimněte si rozdílu ve struktuře odpovědí. Jiné úložiště než Fuseki a Virtuoso nepoužíváme.
-   * Ukázkové dotazy, můžete využít příklady ve druhém cvičení DBM2.
+This code is released under the [MIT license](http://opensource.org/licenses/MIT).

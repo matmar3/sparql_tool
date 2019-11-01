@@ -26,7 +26,7 @@ class SPARQL {
     }
 
     /**
-     * Sent query to given URL and manage response.
+     * Send query to given URL and manage response.
      * @param url - URL endpoint
      * @param query - some type of query
      * @param contentType - datatype of given query
@@ -50,7 +50,7 @@ class SPARQL {
     }
 
     /**
-     * Sent plaintext query to given URL and manage response.
+     * Send plaintext query to given URL and manage response.
      * @param url - URL endpoint
      * @param query - plaintext query
      * @param handleSuccess - handler for response
@@ -128,7 +128,7 @@ class SPARQL {
         table.style.cssText = "border-collapse: collapse; border: 1px solid black; margin-bottom: 3em;"; 
 
         // render table
-        $(this.targetElement).append(table);
+        document.querySelector(this.targetElement).appendChild(table);
     }
     
     /**
@@ -163,7 +163,7 @@ class RESTClient {
     public static readonly DATA_TYPE = 'json';
     
     /**
-     * Asynchronous GET request sent given data to the endpoint URL.
+     * Asynchronous GET request send given data to the endpoint URL.
      * @param url - endpoint URL
      * @param data - add additional data to the request
      * @param contentType - type of retrieved content
@@ -175,7 +175,7 @@ class RESTClient {
     }
     
     /**
-     * Asynchronous POST request sent given data to the endpoint URL.
+     * Asynchronous POST request send given data to the endpoint URL.
      * @param url - endpoint URL
      * @param data - add additional data to the request
      * @param contentType - type of retrieved content

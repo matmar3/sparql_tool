@@ -1,16 +1,17 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "outDir": "compiled",
-      "sourceMap": false,
-      "removeComments": true,
-      "noImplicitAny": true
-    },    
-    "include": [
-        "js/*.ts"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
-  }
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "compiled",
+    "sourceMap": false,
+    "removeComments": true,
+    "noImplicitAny": true
+  },    
+  "include": [    
+    "lib/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
