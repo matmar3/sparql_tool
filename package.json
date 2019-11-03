@@ -2,15 +2,22 @@
   "name": "sparql-tool",
   "version": "1.0.0",
   "description": "SPARQL Tool",
-  "main": "lib/sparqljs.ts",
+  "main": "dist/sparqljs.js",
   "dependencies": {
     "@types/jquery": "^3.3.31"
   },
   "devDependencies": {
-    "typescript": "^3.6.4"
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.4",
+    "uglify-js": "^3.6.7"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "del dist\\sparqljs*.js && rd /s /q docs",
+    "tsc": "tsc",
+    "minify": "uglifyjs dist\\sparqljs.js -c -m -o dist\\sparqljs.min.js",
+    "docs": "typedoc --out docs src",
+    "build": "npm run tsc && npm run minify && npm run docs"
   },
   "repository": {
     "type": "git",

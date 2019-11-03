@@ -3,13 +3,13 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "outDir": "lib/js",
+    "outDir": "dist",
     "sourceMap": false,
     "removeComments": true,
     "noImplicitAny": true
   },    
   "include": [    
-    "lib/ts/*.ts"
+    "src/*.ts"
   ],
   "exclude": [
     "node_modules"
