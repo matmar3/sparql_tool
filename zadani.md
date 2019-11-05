@@ -20,6 +20,6 @@
    * Ukázkové dotazy, můžete využít příklady ve druhém cvičení DBM2.
 
 ### Dodělávky:
-   * HTML ukázka - několik klikatelných dotazů, které se vyplní do formuláře a pošlou na server
+   * HTML ukázka - několik klikatelných dotazů, které se vyplní do formuláře a pošlou na server                         --------- DONE
    * ukázka práce s QueryManagerem (jak vypadají struktury před uložnením dotazu a po uložení) + jak sestavit projekt
    * Dokuementace, jaké problémy jsem řešil, obrázek aplikace, atd ...
