@@ -18,3 +18,8 @@
    * Virtuoso - https://dbpedia.org/sparql (pro vzdálené volání třeba oprávnění)
    * Všimněte si rozdílu ve struktuře odpovědí. Jiné úložiště než Fuseki a Virtuoso nepoužíváme.
    * Ukázkové dotazy, můžete využít příklady ve druhém cvičení DBM2.
+
+### Dodělávky:
+   * HTML ukázka - několik klikatelných dotazů, které se vyplní do formuláře a pošlou na server
+   * ukázka práce s QueryManagerem (jak vypadají struktury před uložnením dotazu a po uložení) + jak sestavit projekt
+   * Dokuementace, jaké problémy jsem řešil, obrázek aplikace, atd ...

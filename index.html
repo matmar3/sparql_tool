@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Remote ajax fuseki test</title>
+<title>SPARQL Tool Example</title>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="dist/sparqljs.min.js"></script>
@@ -12,8 +12,33 @@
 </head>
   <body>
 
-    <div class="example-form">
-      <input type="text" id="query" />
+    <h1>Examples</h1>
+
+    <div class="query-examples" style="margin: 10px;">
+      <div class="query-example" style="padding: 10px;border: 1px black solid;margin-bottom: 5px;" data-query="SELECT ?s ?p ?o ((5) as ?i) WHERE{ ?s ?p ?o } LIMIT 10">
+          SELECT ?s ?p ?o ((5) as ?i) <br />
+          WHERE{ ?s ?p ?o } <br />
+          LIMIT 10
+      </div>
+      <div class="query-example" style="padding: 10px;border: 1px black solid;margin-bottom: 5px;" data-query="PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?name WHERE { ?person foaf:name ?name . }">
+          PREFIX foaf:  &lt;http://xmlns.com/foaf/0.1/&gt; <br />
+          SELECT ?name <br />
+          WHERE { <br />
+              ?person foaf:name ?name . <br />
+          }
+      </div>
+      <div class="query-example" style="padding: 10px;border: 1px black solid;margin-bottom: 5px;" data-query="SELECT DISTINCT ?concept WHERE { ?s a ?concept . } LIMIT 50">
+          SELECT DISTINCT ?concept <br />
+          WHERE { <br />
+              ?s a ?concept . <br />
+          } LIMIT 50
+      </div>
+    </div>
+
+    <h1>Send SPARQL query</h1>
+
+    <div class="example-form" style="margin-bottom: 10px;">
+      <textarea name="query-input" id="query-input" cols="60" rows="10"></textarea> <br />
       <input type="button" value="Odeslat" id="submit-query" />
     </div>
 

@@ -128,7 +128,8 @@ class SPARQL {
         table.style.cssText = "border-collapse: collapse; border: 1px solid black; margin-bottom: 3em;"; 
 
         // render table
-        document.querySelector(this.targetElement).appendChild(table);
+        let element = document.querySelector(this.targetElement);
+        element.replaceChild(table, element.firstChild);
     }
     
     /**
