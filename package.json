@@ -12,12 +12,11 @@
     "typescript": "^3.6.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "del dist\\sparqljs*.js && rd /s /q docs",
     "tsc": "tsc",
     "minify": "javascript-obfuscator dist\\sparqljs.js -o dist\\sparqljs.min.js --compact true --controlFlowFlattening false --deadCodeInjection false --debugProtection false --debugProtectionInterval false --disableConsoleOutput true --identifierNamesGenerator hexadecimal --log false --renameGlobals false --rotateStringArray true --selfDefending true --stringArray true --stringArrayEncoding false --stringArrayThreshold 0.75 --unicodeEscapeSequence false && del dist\\sparqljs.js",
     "docs": "typedoc --out docs src",
-    "build": "npm run clean && npm run tsc && npm run docs",
+    "build": "npm run tsc && npm run docs",
     "build:min": "npm run build && npm run minify"
   },
   "repository": {

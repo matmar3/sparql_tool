@@ -39,12 +39,11 @@
 
     <div class="example-form" style="margin-bottom: 10px;">
       <textarea name="query-input" id="query-input" cols="60" rows="10"></textarea> <br />
-      <input type="button" value="Odeslat" id="submit-query" />
+      <input type="button" value="Odeslat na Fuseki endpoint" data-url="http://localhost:3030/DBM2/query" class="submit-query" />
+      <input type="button" value="Odeslat na Virtuoso endpoint" data-url="http://dbpedia.org/sparql" class="submit-query" />
     </div>
 
-    <div id="example-sparql-results">
-
-    </div>
+    <div id="example-sparql-results"></div>
 
   </body>
 </html>
