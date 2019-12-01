@@ -129,7 +129,8 @@ class SPARQL {
 
         // render table
         let element = document.querySelector(this.targetElement);
-        element.replaceChild(table, element.firstChild);
+        element.innerHTML = ''
+        element.appendChild(table);
     }
     
     /**
