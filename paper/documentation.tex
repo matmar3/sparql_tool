@@ -86,6 +86,13 @@ hlavičce) a bude umět:
 
 \section{Řešení}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{view}
+	\caption{Ukázka UI aplikace.}
+	\label{fig:ui}
+\end{figure}
+
 Nástroj byl po zvážení vypracován pomocí jazyka \texttt{TypeScript}, který umožňuje přeložení zdrojového kódu do Javascriptu ve standardu ECMAScript 5 (ES5). Standard ES5 byl zvolen předevší pro svoji rozšířenost, protože v dnešní době je podporován většinou prohlížečů a knihoven. Další nespornou výhodou jazyka TypeScript byla možnost napsat nástroj s využitím typové kontroly a možností OOP programování, díky čemuž je kód snadno pochopitelný a přehledný. \\
 
 Pro správu závislostí a sestavení projektu byl využit nástroj \texttt{npm}, který se velmi často využívá ve spojení s klientskými aplikacemi. Pomocí tohoto nástroje byl založen projekt, nadefinovány potřebné závislosti pro vývoj a především skripty, které slouží k sestavení projektu a vygenerování dokumentace kódu. Zprovoznění projektu je poté velmi jednoduché, stačí mít pouze nainstalovaný nástroj \texttt{npm} a následně sestavit projekt jedním příkazem.
@@ -111,16 +118,9 @@ Aby bylo možné efektivně pracovat s dotazy uloženými v lokálním úložiš
 }
 \end{Verbatim}
 
-Každý dotazy typu \texttt{Query} je uložen uvnitř pole \texttt{queries}. Aby bylo možné dotazy verzovat, každý dotaz obsahuje pole všech verzí dotazu \texttt{queryString} a ukazatel definující aktuální verzi \texttt{currentVersion}.
+Každý dotazy typu \texttt{Query} je uložen uvnitř pole \texttt{queries}. Aby bylo možné dotazy verzovat, každý dotaz obsahuje pole všech verzí dotazu \texttt{queryString} a ukazatel definující aktuální verzi \texttt{currentVersion}, který slouží jako index do pole \texttt{queryString}.
 
 \section{Uživatelská dokumentace}
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\textwidth]{view}
-	\caption{Ukázka UI aplikace.}
-	\label{fig:ui}
-\end{figure}
 
 \subsection{Sestavení}
 \label{sec:build}
